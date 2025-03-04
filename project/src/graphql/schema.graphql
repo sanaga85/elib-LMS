@@ -1,0 +1,320 @@
+type Institution @aws_cognito_user_pools {
+  id: ID!
+  name: String!
+  logo: String!
+  primaryColor: String!
+  secondaryColor: String!
+  domain: String!
+  active: Boolean!
+  createdAt: String!
+  updatedAt: String!
+  description: String
+  address: String
+  phone: String
+  email: String
+  website: String
+  foundedYear: Int
+}
+
+type User @aws_cognito_user_pools {
+  id: ID!
+  email: String!
+  firstName: String!
+  lastName: String!
+  role: String!
+  institutionId: ID
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Resource @aws_cognito_user_pools {
+  id: ID!
+  title: String!
+  description: String!
+  type: String!
+  url: String!
+  thumbnailUrl: String!
+  author: String!
+  publishedDate: String!
+  categories: [String!]!
+  tags: [String!]!
+  institutionId: ID
+  rating: Float!
+  bookmarks: Int!
+  featured: Boolean!
+  createdBy: ID!
+  createdAt: String!
+  updatedAt: String!
+  downloadUrl: String
+  offlineAvailable: Boolean!
+  fileSize: Int
+}
+
+type Course @aws_cognito_user_pools {
+  id: ID!
+  title: String!
+  description: String!
+  institutionId: ID!
+  facultyId: ID!
+  enrolledStudents: [ID!]!
+  resources: [ID!]!
+  createdAt: String!
+  updatedAt: String!
+  startDate: String!
+  endDate: String!
+  thumbnail: String
+  status: String!
+}
+
+type Query {
+  # Institution queries
+  getInstitution(id: ID!): Institution @aws_cognito_user_pools
+  listInstitutions(filter: InstitutionFilterInput, limit: Int, nextToken: String): InstitutionConnection @aws_cognito_user_pools
+  
+  # User queries
+  getUser(id: ID!): User @aws_cognito_user_pools
+  listUsers(filter: UserFilterInput, limit: Int, nextToken: String): UserConnection @aws_cognito_user_pools
+  
+  # Resource queries
+  getResource(id: ID!): Resource @aws_cognito_user_pools
+  listResources(filter: ResourceFilterInput, limit: Int, nextToken: String): ResourceConnection @aws_cognito_user_pools
+  
+  # Course queries
+  getCourse(id: ID!): Course @aws_cognito_user_pools
+  listCourses(filter: CourseFilterInput, limit: Int, nextToken: String): CourseConnection @aws_cognito_user_pools
+}
+
+type Mutation {
+  # Institution mutations
+  createInstitution(input: CreateInstitutionInput!): Institution @aws_cognito_user_pools
+  updateInstitution(input: UpdateInstitutionInput!): Institution @aws_cognito_user_pools
+  deleteInstitution(id: ID!): Institution @aws_cognito_user_pools
+  
+  # User mutations
+  createUser(input: CreateUserInput!): User @aws_cognito_user_pools
+  updateUser(input: UpdateUserInput!): User @aws_cognito_user_pools
+  deleteUser(id: ID!): User @aws_cognito_user_pools
+  
+  # Resource mutations
+  createResource(input: CreateResourceInput!): Resource @aws_cognito_user_pools
+  updateResource(input: UpdateResourceInput!): Resource @aws_cognito_user_pools
+  deleteResource(id: ID!): Resource @aws_cognito_user_pools
+  
+  # Course mutations
+  createCourse(input: CreateCourseInput!): Course @aws_cognito_user_pools
+  updateCourse(input: UpdateCourseInput!): Course @aws_cognito_user_pools
+  deleteCourse(id: ID!): Course @aws_cognito_user_pools
+}
+
+type Subscription {
+  # Institution subscriptions
+  onCreateInstitution: Institution @aws_subscribe(mutations: ["createInstitution"])
+  onUpdateInstitution: Institution @aws_subscribe(mutations: ["updateInstitution"])
+  onDeleteInstitution: Institution @aws_subscribe(mutations: ["deleteInstitution"])
+  
+  # User subscriptions
+  onCreateUser: User @aws_subscribe(mutations: ["createUser"])
+  onUpdateUser: User @aws_subscribe(mutations: ["updateUser"])
+  onDeleteUser: User @aws_subscribe(mutations: ["deleteUser"])
+  
+  # Resource subscriptions
+  onCreateResource: Resource @aws_subscribe(mutations: ["createResource"])
+  onUpdateResource: Resource @aws_subscribe(mutations: ["updateResource"])
+  onDeleteResource: Resource @aws_subscribe(mutations: ["deleteResource"])
+  
+  # Course subscriptions
+  onCreateCourse: Course @aws_subscribe(mutations: ["createCourse"])
+  onUpdateCourse: Course @aws_subscribe(mutations: ["updateCourse"])
+  onDeleteCourse: Course @aws_subscribe(mutations: ["deleteCourse"])
+}
+
+# Input types for filtering
+input InstitutionFilterInput {
+  id: IDFilterInput
+  name: StringFilterInput
+  domain: StringFilterInput
+  active: BooleanFilterInput
+}
+
+input UserFilterInput {
+  id: IDFilterInput
+  email: StringFilterInput
+  role: StringFilterInput
+  institutionId: IDFilterInput
+}
+
+input ResourceFilterInput {
+  id: IDFilterInput
+  title: StringFilterInput
+  type: StringFilterInput
+  institutionId: IDFilterInput
+  categories: StringFilterInput
+  offlineAvailable: BooleanFilterInput
+}
+
+input CourseFilterInput {
+  id: IDFilterInput
+  title: StringFilterInput
+  institutionId: IDFilterInput
+  facultyId: IDFilterInput
+  status: StringFilterInput
+}
+
+# Input types for mutations
+input CreateInstitutionInput {
+  name: String!
+  logo: String!
+  primaryColor: String!
+  secondaryColor: String!
+  domain: String!
+  active: Boolean!
+  description: String
+  address: String
+  phone: String
+  email: String
+  website: String
+  foundedYear: Int
+}
+
+input UpdateInstitutionInput {
+  id: ID!
+  name: String
+  logo: String
+  primaryColor: String
+  secondaryColor: String
+  domain: String
+  active: Boolean
+  description: String
+  address: String
+  phone: String
+  email: String
+  website: String
+  foundedYear: Int
+}
+
+input CreateUserInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+  role: String!
+  institutionId: ID
+}
+
+input UpdateUserInput {
+  id: ID!
+  email: String
+  firstName: String
+  lastName: String
+  role: String
+  institutionId: ID
+}
+
+input CreateResourceInput {
+  title: String!
+  description: String!
+  type: String!
+  url: String!
+  thumbnailUrl: String!
+  author: String!
+  publishedDate: String!
+  categories: [String!]!
+  tags: [String!]!
+  institutionId: ID
+  rating: Float!
+  bookmarks: Int!
+  featured: Boolean!
+  createdBy: ID!
+  downloadUrl: String
+  offlineAvailable: Boolean!
+  fileSize: Int
+}
+
+input UpdateResourceInput {
+  id: ID!
+  title: String
+  description: String
+  type: String
+  url: String
+  thumbnailUrl: String
+  author: String
+  publishedDate: String
+  categories: [String!]
+  tags: [String!]
+  institutionId: ID
+  rating: Float
+  bookmarks: Int
+  featured: Boolean
+  downloadUrl: String
+  offlineAvailable: Boolean
+  fileSize: Int
+}
+
+input CreateCourseInput {
+  title: String!
+  description: String!
+  institutionId: ID!
+  facultyId: ID!
+  enrolledStudents: [ID!]!
+  resources: [ID!]!
+  startDate: String!
+  endDate: String!
+  thumbnail: String
+  status: String!
+}
+
+input UpdateCourseInput {
+  id: ID!
+  title: String
+  description: String
+  institutionId: ID
+  facultyId: ID
+  enrolledStudents: [ID!]
+  resources: [ID!]
+  startDate: String
+  endDate: String
+  thumbnail: String
+  status: String
+}
+
+# Filter input types
+input IDFilterInput {
+  eq: ID
+  ne: ID
+  contains: ID
+  notContains: ID
+  beginsWith: ID
+}
+
+input StringFilterInput {
+  eq: String
+  ne: String
+  contains: String
+  notContains: String
+  beginsWith: String
+}
+
+input BooleanFilterInput {
+  eq: Boolean
+  ne: Boolean
+}
+
+# Connection types for pagination
+type InstitutionConnection {
+  items: [Institution]
+  nextToken: String
+}
+
+type UserConnection {
+  items: [User]
+  nextToken: String
+}
+
+type ResourceConnection {
+  items: [Resource]
+  nextToken: String
+}
+
+type CourseConnection {
+  items: [Course]
+  nextToken: String
+}
